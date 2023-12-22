@@ -3,6 +3,50 @@ $(function(){
 		var dialog=$("dialog");
 		  dialog.close();
 	});
+	$(".verifierform").addEventListener("click", () => {
+		var dialog=$("dialog");
+		var formdialog=$("[method=dialog]");
+		var num=$("#num");
+		var indicatif=$("#indicatif");
+  $.ajax({
+    // Your server script to process the upload
+    url: formdialog.attr("action"),
+    type: 'POST',
+
+    // Form data
+    data: new FormData(formdialog[0]),
+
+    // Tell jQuery not to process data or worry about content-type
+    // You *must* include these options!
+    cache: false,
+    contentType: false,
+    processData: false,
+
+    // Custom XMLHttpRequest
+    success: function (data) {
+	    console.log("HEY")
+	    if (data){
+$(".accordion").html(data);
+	    }
+},
+    xhr: function () {
+      var myXhr = $.ajaxSettings.xhr();
+      if (myXhr.upload) {
+        // For handling the progress of the upload
+        myXhr.upload.addEventListener('progress', function (e) {
+          if (e.lengthComputable) {
+            $('progress').attr({
+              value: e.loaded,
+              max: e.total,
+            });
+          }
+        }, false);
+      }
+      return myXhr;
+    }
+  });
+		  dialog.close();
+	});
 $('.carousel').carousel();
 $('span.myscript').on('click', function () {
   if (window.filesize > 1024*5) {

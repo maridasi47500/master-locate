@@ -141,6 +141,15 @@ class RenderFigure():
         except:
           return self.body
 
+    def render_some_html(self,filename):
+        self.mytemplate=False
+
+        self.body=open(os.path.abspath(self.path+"/"+filename),"r").read()
+        self.body=self.render_body()
+        try:
+          return self.body.encode("utf-8")
+        except:
+          return self.body
     def render_some_json(self,filename):
 
         self.body=open(os.path.abspath(self.path+"/"+filename),"r").read()

@@ -4,24 +4,26 @@
 </div>
 <div class="right">
 	<h3></h3>
+<ul class="accordion">
+</ul>
 	<button>Exporter Méthode</button>
 </div>
 <dialog open>
 
 
-	    <form method="dialog">
+	    <form action="/verifier" method="dialog">
 	  <div class="field">
 	  <p>numéro mobile devictime</p>
-		  <select name="numero">
+		  <select id="indicatif" name="indicatif">
 			  <option>+33</option>
 			  <option>+574</option>
 		  </select>
 
-		  <input type="number" name="numero"/>
+		  <input type="number" id="num" name="numero"/>
 	  </div>
 
 		  <div class="actions">
-		        <button>Vérifier</button>
+		        <button class="verifierform">Vérifier</button>
 			   <button class="closeform" value="cancel">Fermer</button>
 		  </div>
 			  </form>

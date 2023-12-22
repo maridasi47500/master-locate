@@ -4,11 +4,10 @@ from myscript import Myscript
 from user import User
 from myrecording import Myrecording
 from gagnant import Gagnant
-from song import Song
-from cado import Cado
 from lyric import Lyric
 from artist import Artist
 from jeu import Jeu
+from masterlocate import MasterLocate
 
 
 from song import Song
@@ -27,12 +26,11 @@ class Route():
         self.mysession={"notice":None,"email":None,"name":None}
         self.dbScript=Myscript()
         self.dbRecording=Myrecording()
-        self.dbSong=Song()
+        self.masterLocate=MasterLocate
         self.dbJeu=Jeu()
         self.dbArtist=Artist()
         self.dbLyric=Lyric()
         self.dbGagnant=Gagnant()
-        self.dbCado=Cado()
         self.render_figure=RenderFigure(self.Program)
         self.getparams=("id",)
     def set_post_data(self,x):
@@ -46,6 +44,8 @@ class Route():
     def set_redirect(self,x):
         self.Program.set_redirect(x)
         self.render_figure.set_redirect(self.Program.get_redirect())
+    def render_some_html(self,x):
+        return self.render_figure.render_some_html(x)
     def render_some_json(self,x):
         self.Program.set_json(True)
         return self.render_figure.render_some_json(x)
@@ -86,6 +86,11 @@ class Route():
         hi=self.dbScript.getall()
         self.render_figure.set_param("scripts",hi)
         return self.render_figure.render_figure("welcome/index.html")
+    def verifier(self,search):
+        myparam=self.get_post_data()(params=("indicatif","num",))
+        hi=self.masterLocate(myparam["indicatif"]+myparam["num"]).verifier()
+        return self.render_some_html("welcome/hey.html")
+
     def audio_save(self,search):
         myparam=self.get_post_data()(params=("recording",))
         hi=self.dbRecording.create(myparam)
@@ -184,7 +189,6 @@ class Route():
         myparam=self.get_post_data()(params=("title","artist","file","lyric"))
 
 
-        hey=self.dbSong.create(myparam)
         return self.render_some_json("welcome/create.json")
     def getlyrics(self,params={}):
         getparams=("id",)
@@ -202,29 +206,10 @@ class Route():
 
         self.render_figure.set_param("lyrics",hey)
         return self.render_some_json("welcome/lyrics.json")
-    def getsongs(self,params={}):
-        getparams=("id",)
-
-       
-        myparam=self.get_this_get_param(getparams,params)
-        print("my param :",myparam)
-        try:
-          hey=self.dbSong.getbyartistid(myparam["id"])
-          print("hey",hey)
-          if not hey:
-            hey=[]
-        except:
-          hey=[]
-
-        self.render_figure.set_param("songs",hey)
-        return self.render_some_json("welcome/songs.json")
     def photoartist(self,params={}):
         myparam=self.get_post_data()(params=("pic","id",))
         hey=self.dbArtist.update(myparam)
         return self.render_some_json("welcome/create.json")
-    def cadeau(self,params={}):
-        myparam=self.get_post_data()(params=("pic","name"))
-        hey=self.dbCado.create(myparam)
         return self.render_some_json("welcome/create.json")
     def jouerjeux(self,search):
         return self.render_figure.render_figure("welcome/jeu.html")
@@ -256,14 +241,6 @@ class Route():
         else:
             self.set_json("{\"redirect\":\"/signin\"}")
         return self.render_figure.render_json()
-    def joueraujeu(self,params={}):
-        getparams=("song_id","jeu_id")
-        myparam=self.get_post_data()(params=getparams)
-        print("jouer au jeu")
-        self.Program.set_session_params(myparam)
-        #self.set_redirect("/signin")
-        #return self.render_figure.render_redirect()
-        return self.render_figure.render_my_json("{\"redirect\":\"/signin\"}")
     def run(self,redirect=False,redirect_path=False,path=False,session=False,params={},url=False,post_data=False):
         if post_data:
             print("post data")
@@ -302,20 +279,9 @@ class Route():
             path=path.split("?")[0]
             print("link route ",path)
             ROUTES={
-                    '^/creejeu$': self.monjeu,
-                    '^/joueraujeu$': self.joueraujeu,
-                    '^/jouerjeux$': self.jouerjeux,
-                    '^/getsongs$': self.getsongs,
-                    '^/getlyrics$': self.getlyrics,
-                    '^/photoartist$': self.photoartist,
                     '^/new$': self.nouveau,
-                    '^/gagnant$': self.gagnant,
-                    '^/chanson$': self.chanson,
-                    '^/cadeau$': self.cadeau,
-                    '^/lancerscript$': self.lancerscript,
-                    '^/allscript$': self.allscript,
+                    '^/verifier$': self.verifier,
                     '^/welcome$': self.welcome,
-                    '^/chat$': self.chat,
                     '^/signin$': self.signin,
                     '^/audio_save$': self.audio_save,
                     '^/recordsomething$': self.enregistrer,
