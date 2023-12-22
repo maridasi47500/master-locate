@@ -3,34 +3,31 @@ import sqlite3
 import sys
 import re
 from model import Model
-class Numero(Model):
+class Event(Model):
     def __init__(self):
         self.con=sqlite3.connect(self.mydb)
         self.con.row_factory = sqlite3.Row
         self.cur=self.con.cursor()
-        self.cur.execute("""create table if not exists numero(
+        self.cur.execute("""create table if not exists event(
         id integer primary key autoincrement,
-        numero text
+        eventid text,
+            name text
                     );""")
         self.con.commit()
         #self.con.close()
     def getall(self):
-        self.cur.execute("select * from numero")
+        self.cur.execute("select * from event")
 
         row=self.cur.fetchall()
         return row
     def deletebyid(self,myid):
 
-        self.cur.execute("delete from numero where id = ?",(myid,))
+        self.cur.execute("delete from event where id = ?",(myid,))
         job=self.cur.fetchall()
         self.con.commit()
         return None
-    def getbynumero(self,myid):
-        self.cur.execute("select * from numero where numero = ?",(myid,))
-        row=dict(self.cur.fetchone())
-        return row
     def getbyid(self,myid):
-        self.cur.execute("select * from numero where id = ?",(myid,))
+        self.cur.execute("select * from event where id = ?",(myid,))
         row=dict(self.cur.fetchone())
         print(row["id"], "row id")
         job=self.cur.fetchall()
@@ -53,14 +50,14 @@ class Numero(Model):
         print(myhash,myhash.keys())
         myid=None
         try:
-          self.cur.execute("insert into numero (numero) values (:numero)",myhash)
+          self.cur.execute("insert into event (eventid,name) values (:eventid,:name)",myhash)
           self.con.commit()
           myid=str(self.cur.lastrowid)
         except Exception as e:
           print("my error"+str(e))
         azerty={}
-        azerty["numero_id"]=myid
-        azerty["notice"]="votre numero a été ajouté"
+        azerty["event_id"]=myid
+        azerty["notice"]="votre event a été ajouté"
         return azerty
 
 

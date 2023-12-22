@@ -9,6 +9,12 @@ et
 ```
 $ sh mysite.sh
 ```
+- set facebooktoken=fake
+
+```
+export facebooktoken=fake
+
+```
 - visit http://localhost:8081
 
 

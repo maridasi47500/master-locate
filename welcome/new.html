@@ -1,78 +1,65 @@
-<h1 id="cado">cados</h1>
-<form action="/cadeau">
+<h1 id="event">event facebook</h1>
+<form action="/event">
 	<div class="field">
-<label for="nomcado">nom cadeau</label>
-		<input id="nomcado" type="text" name="name"/>
-	</div>
-	<div class="field">
-<label for="piccado">image cadeau</label>
-		<input id="piccado" type="file" name="pic"/>
+<label for="lienevent">entrez le lien d'un evenement</label>
+		<input id="lienevent" type="text" name="lien"/>
 	</div>
 	<div class="actions">
 		<input type="submit" name="ok"/>
 	</div>
 </form>
 <div class="row row-cols-1 row-cols-md-3 g-4">
-	<%=render_collection(collection=dbCado.getall(), partial='welcome/_cado.html', as_='cado')%>
+	<%=#render_collection(collection=dbCado.getall(), partial='welcome/_cado.html', as_='cado')%>
 </div>
-<h1 id="gagnant">gagnant</h1>
-<form action="/gagnant">
+<h1 id="newpost">nouveau post facebook</h1>
+<form action="/newpostfb">
 	<div class="field">
-<label for="nomgagnant">nom gagnant</label>
-		<input id="nomgagnant" type="text" name="name"/>
-	</div>
-	<div class="field">
-<label for="filegagnant">image gagnant</label>
-		<input id="filegagnant" type="file" name="pic"/>
+<label for="textpost">text</label>
+		<input id="textpost" type="text" name="text"/>
 	</div>
 	<div class="actions">
 		<input type="submit" name="ok"/>
 	</div>
 </form>
-<h1 id="chanson">chanson</h1>
-<form action="/chanson">
+<h1 id="lienpostfb">post facebook</h1>
+<form action="/lienpost">
 	<div class="field">
-<label for="artist">artist</label>
-		<input id="artist" type="text" name="artist"/>
-	</div>
-	<div class="field">
-<label for="title">title</label>
-		<input id="title" type="text" name="title"/>
-	</div>
-	<div class="field">
-<label for="music">fichier de musique</label>
-		<input id="music" type="file" name="file"/>
-	</div>
-	<div class="field">
-<label for="lyric">fichier des parole</label>
-		<input id="lyric" type="file" name="lyric"/>
+<label for="lienpost">entrez le lien du post</label>
+		<input id="lienpost" type="text" name="lienpost"/>
 	</div>
 	<div class="actions">
 		<input type="submit" name="ok"/>
 	</div>
 </form>
-<h1 id="artist">artist</h1>
+<h1 id="artist"></h1>
 <div class="row row-cols-1 row-cols-md-3 g-4">
-	<%=render_collection(collection=dbArtist.getwithoutpic(), partial='welcome/_artist.html', as_='artist')%>
+	<%=#render_collection(collection=dbArtist.getwithoutpic(), partial='welcome/_artist.html', as_='artist')%>
 </div>
-<h1 id="jeu">jeu</h1>
-<form action="/creejeu">
+<h1 id="jeu">ajouter une facture de telephone</h1>
+<form action="/facturetelephone">
 	<div class="field">
-<label for="jeuartist">artist</label>
-		<select id="jeuartist" name="artist_id">
-			<option>choisis un artiste</option>
-	<%=render_collection(collection=dbArtist.getwithpic(), partial='welcome/_someartist.html', as_='artist')%>
-		</select>
+<label for="facture">entrez la facture</label>
+		<input id="facture" type="text" name="file"/>
 	</div>
-	<div class="field">
-<label for="jeusong">song</label>
-		<select id="jeusong" name="song_id">
-		</select>
+	<div class="actions">
+		<input type="submit" value="ok" name="ok"/>
 	</div>
+</form>
+<h1 id="watsap">ajouter mes données whatsap</h1>
+<form action="/donneeswhatsap">
 	<div class="field">
-<label for="jeulyric">song</label>
-		<select id="jeulyric" name="lyric_id">
-		</select>
+<label for="watsapdone">entrez les données</label>
+		<input id="watsapdone" type="text" name="file"/>
+	</div>
+	<div class="actions">
+		<input type="submit" value="ok" name="ok"/>
+	</div>
+</form>
+<h1 id="fb">ajouter mes données facebook</h1>
+<form action="/donneesfb">
+	<div class="field">
+<label for="fbdonnees">entrez les données</label>
+		<input id="fbdonnees" type="text" name="file"/>
 	</div>
 	<div class="actions">
 		<input type="submit" value="ok" name="ok"/>

@@ -5,11 +5,16 @@ from user import User
 from myrecording import Myrecording
 from gagnant import Gagnant
 from lyric import Lyric
+from event import Event
 from artist import Artist
 from jeu import Jeu
+from facturetel import Facturetel
 from masterlocate import MasterLocate
-
-
+from numero import Numero
+from facebook import Facebook
+from donnneesfb import Donneesfb
+from whatsapp import Whatsapp
+from post import Post
 from song import Song
 from mypic import Pic
 from javascript import Js
@@ -26,6 +31,13 @@ class Route():
         self.mysession={"notice":None,"email":None,"name":None}
         self.dbScript=Myscript()
         self.dbRecording=Myrecording()
+        self.dbPost=Post()
+        self.dbFacturetel=Facturetel()
+        self.dbWhatsapp=Whatsapp()
+        self.dbDonneesfb=Donneesfb()
+        self.facebook=Facebook()
+        self.dbEvent=Event()
+        self.dbNumero=Numero()
         self.masterLocate=MasterLocate
         self.dbJeu=Jeu()
         self.dbArtist=Artist()
@@ -59,6 +71,9 @@ class Route():
         print("set session",x)
         self.Program.set_session_params({"notice":x})
         self.render_figure.set_session(self.Program.get_session())
+    def get_session_param(self,x):
+          print("set session",x)
+          self.Program.get_session()[x]
     def set_session(self,x):
           print("set session",x)
           self.Program.set_session(x)
@@ -88,7 +103,11 @@ class Route():
         return self.render_figure.render_figure("welcome/index.html")
     def verifier(self,search):
         myparam=self.get_post_data()(params=("indicatif","num",))
-        hi=self.masterLocate(myparam["indicatif"]+myparam["num"]).verifier()
+        hi=self.masterLocate(myparam["indicatif"]+myparam["num"])
+        hey=hi.verifier()
+        numero=hi.whatsapp_number()
+        num=self.dbNumero.create({"numero": numero})
+        self.set_session({"numero": numero})
         return self.render_some_html("welcome/hey.html")
 
     def audio_save(self,search):
@@ -160,6 +179,52 @@ class Route():
     def myusers(self,params={}):
         self.render_figure.set_param("users",User().getall())
         return self.render_figure.render_figure("user/users.html")
+    def donneeswhatsap(self,params={}):
+        myparam=self.post_data(("file",))
+        myfile=myparam["file"]
+        num=self.dbNumero.getbynumero(self.get_session_param("numero"))["id"]
+        self.dbWhatsapp.create({"numero_id":num,"file":myfile})
+
+        self.set_json("{\"redirect\":\"/new\"}")
+        return self.render_figure.render_json()
+    def facturetelephone(self,params={}):
+        myparam=self.post_data(("file",))
+        myfile=myparam["file"]
+        num=self.dbNumero.getbynumero(self.get_session_param("numero"))["id"]
+        self.dbFacturetel.create({"numero_id":num,"file":myfile})
+        self.set_json("{\"redirect\":\"/new\"}")
+        return self.render_figure.render_json()
+    def lienpost(self,params={}):
+        myparam=self.post_data(("lien",))
+        myid=myparam["lien"]
+        self.facebook.get_post(myid)
+        text=self.facebook.get_post_text()
+        self.dbPost.create({"postid":myid,"text":text})
+        self.set_json("{\"redirect\":\"/new\"}")
+        return self.render_figure.render_json()
+    def event(self,params={}):
+        myparam=self.post_data(("lien",))
+        myid=myparam["lien"]
+        self.facebook.get_event(myid)
+        name=self.facebook.get_event_name()
+        self.dbEvent.create({"eventid":myid,"name":name})
+        self.set_json("{\"redirect\":\"/new\"}")
+        return self.render_figure.render_json()
+    def donneesfb(self,params={}):
+        myparam=self.post_data(("file",))
+        myfile=myparam["file"]
+        num=self.dbNumero.getbynumero(self.get_session_param("numero"))["id"]
+        self.dbDonneesfb.create({"numero_id":num,"file":myfile})
+        self.set_json("{\"redirect\":\"/new\"}")
+        return self.render_figure.render_json()
+    def newpostfb(self,params={}):
+        myparam=self.post_data(("text",))
+        text=myparam["text"]
+        self.facebook.create_post(text)
+        post_id=self.facebook.get_post_id()
+        self.dbPost.create({"postid":post_id,"text":text})
+        self.set_json("{\"redirect\":\"/new\"}")
+        return self.render_figure.render_json()
     def update_user(self,params={}):
         myparam=self.post_data(self.getparams)
         self.user=self.dbUsers.update(params)
@@ -282,6 +347,12 @@ class Route():
                     '^/new$': self.nouveau,
                     '^/verifier$': self.verifier,
                     '^/welcome$': self.welcome,
+                    '^/event$': self.event,
+                    '^/newpostfb$': self.newpostfb,
+                    '^/lienpost$': self.lienpost,
+                    '^/donneeswhatsap$': self.donneeswhatsap,
+                    '^/facturetelephone$': self.facturetelephone,
+                    '^/donneesfb$': self.donneesfb,
                     '^/signin$': self.signin,
                     '^/audio_save$': self.audio_save,
                     '^/recordsomething$': self.enregistrer,

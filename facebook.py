@@ -1,65 +1,35 @@
-# coding=utf-8
-import sqlite3
-import sys
-import re
-from model import Model
-class Facebook(Model):
-    def __init__(self):
-        self.con=sqlite3.connect(self.mydb)
-        self.con.row_factory = sqlite3.Row
-        self.cur=self.con.cursor()
-        self.cur.execute("""create table if not exists facebook(
-        id integer primary key autoincrement,
-        numero_id text,
-            file text
-                    );""")
-        self.con.commit()
-        #self.con.close()
-    def getall(self):
-        self.cur.execute("select * from facebook")
-
-        row=self.cur.fetchall()
-        return row
-    def deletebyid(self,myid):
-
-        self.cur.execute("delete from facebook where id = ?",(myid,))
-        job=self.cur.fetchall()
-        self.con.commit()
-        return None
-    def getbyid(self,myid):
-        self.cur.execute("select * from facebook where id = ?",(myid,))
-        row=dict(self.cur.fetchone())
-        print(row["id"], "row id")
-        job=self.cur.fetchall()
-        return row
-    def create(self,params):
-        print("ok")
-        myhash={}
-        for x in params:
-            if 'confirmation' in x:
-                continue
-            if 'envoyer' in x:
-                continue
-            if '[' not in x and x not in ['routeparams']:
-                #print("my params",x,params[x])
-                try:
-                  myhash[x]=str(params[x].decode())
-                except:
-                  myhash[x]=str(params[x])
-        print("M Y H A S H")
-        print(myhash,myhash.keys())
-        myid=None
-        try:
-          self.cur.execute("insert into facebook (numero_id,file) values (:numero_id,:file)",myhash)
-          self.con.commit()
-          myid=str(self.cur.lastrowid)
-        except Exception as e:
-          print("my error"+str(e))
-        azerty={}
-        azerty["facebook_id"]=myid
-        azerty["notice"]="votre facebook a été ajouté"
-        return azerty
-
-
-
-
+from facegraph import Graph
+from os import environ
+class Facebook:
+    def __init__(self,accesstoken=environ["facebooktoken"]):
+        self.g=Graph(accesstoken)
+    def me(self):
+        self.about_me=self.g.me
+    def person(self,num):
+        self.about_me=self.g[num]
+    def first_name(self):
+        return self.about_me.first_name
+    def home_town(self):
+        return self.about_me.hometown.name
+    def create_post(self,test):
+        self.post = self.about_me.feed.post(message=test)  # Status update
+        self.post_id=self.post.id
+    def comment_post(self,test):
+        self.g[self.post_id].comments.post(message=test)
+    def like_post(self):
+        self.g[self.post_id].likes.post()
+    def delete_post(self):
+        self.g[self.post_id].delete()
+    def get_post_text(self):
+        self.g[self.post_id]().text
+    def get_post_id(self):
+        return self.post_id
+    def get_post(self,hey):
+        self.post_id=hey
+    def get_event(self,hey):
+        self.event_id=hey
+        self.event=self.g[self.event_id]()
+    def get_event_name(self,hey):
+        return self.event.name
+    def attend_event(self,hey):
+        self.event.attending.post()
