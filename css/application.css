@@ -520,3 +520,6 @@ p.mytext {
 nav{
 background-color:blue;
 }
+#btndownload,#optiontelechargement{
+	display:none;
+}

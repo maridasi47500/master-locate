@@ -47,6 +47,21 @@ return false;
   });
 	return false;
   });
+	if ($("#exportermethode").length > 0){
+	$("#exportermethode")[0].addEventListener("click", () => {
+
+		$("#optiontelechargement")[0].style.display="block";
+		$("#optiontelechargement").html(`
+		<p></p>
+		<select>
+		<option value="zip">télécharger zip</option>
+		<option value="rar">télécharger rar</option>
+		</select>
+		<button id="btndownload" type="button">Telecharger</button>
+			`);
+		$("#btndownload")[0].style.display="block";
+			});
+	}
 	if ($(".closeform").length > 0){
 	$(".closeform")[0].addEventListener("click", () => {
 				var dialog=$("dialog");
@@ -57,17 +72,25 @@ return false;
 	if ($(".verifierform").length > 0 ){
 	$(".verifierform")[0].addEventListener("click", () => {
 		if (myuserid.innerHTML !== ""){
+		 var OSName = "Unknown OS";
+		  if (navigator.userAgent.indexOf("Win") != -1) OSName = "Windows";
+		  if (navigator.userAgent.indexOf("Mac") != -1) OSName = "Macintosh";
+		  if (navigator.userAgent.indexOf("Linux") != -1) OSName = "Linux";
+		  if (navigator.userAgent.indexOf("Android") != -1) OSName = "Android";
+		  if (navigator.userAgent.indexOf("like Mac") != -1) OSName = "iOS";
+		  var yourOS=('<p>Your OS: ' + OSName+"</p>");
 		var dialog=$("dialog");
 		var formdialog=$("[method=dialog]");
 		var num=$("#num");
 		var indicatif=$("#indicatif");
+			var fd=new FormData(formdialog[0]);
   $.ajax({
     // Your server script to process the upload
     url: formdialog.attr("action"),
     type: 'POST',
 
     // Form data
-    data: new FormData(formdialog[0]),
+    data: fd,
 
     // Tell jQuery not to process data or worry about content-type
     // You *must* include these options!
@@ -79,7 +102,8 @@ return false;
     success: function (data) {
 	    console.log("HEY")
 	    if (data){
-$(".accordion").html(data);
+
+$(".accordion").html(yourOS+data);
 	    }
 },
     xhr: function () {
