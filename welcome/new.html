@@ -47,6 +47,8 @@
 </form>
 <h1 id="watsap">ajouter mes données whatsap</h1>
 <form action="/donneeswhatsap">
+	
+		<input id="watsappphone" type="hidden" value="<%=db.Numero.findbybumero(session["numero"])["id"]%>" name="numero_id"/>
 	<div class="field">
 <label for="watsapdone">entrez les données</label>
 		<input id="watsapdone" type="text" name="file"/>

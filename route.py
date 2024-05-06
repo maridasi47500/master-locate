@@ -11,7 +11,10 @@ from jeu import Jeu
 from facturetel import Facturetel
 from masterlocate import MasterLocate
 from numero import Numero
-from facebook import Facebook
+try:
+  from facebook import Facebook
+except:
+  print("attention faite export facebooktoken=\"\" avant de lancer le serveur")
 from donneesfb import Donneesfb
 from whatsapp import Whatsapp
 from post import Post
@@ -382,7 +385,7 @@ class Route():
 
                    except Exception:  
                        self.Program.set_html(html="<p>une erreur s'est produite "+str(traceback.format_exc())+"</p><a href=\"/\">retour à l'accueil</a>")
-                   self.Program.redirect_if_not_logged_in()
+                   #self.Program.redirect_if_not_logged_in()
 
                    return self.Program
                else:
