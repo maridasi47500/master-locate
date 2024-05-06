@@ -12,7 +12,7 @@ from facturetel import Facturetel
 from masterlocate import MasterLocate
 from numero import Numero
 from facebook import Facebook
-from donnneesfb import Donneesfb
+from donneesfb import Donneesfb
 from whatsapp import Whatsapp
 from post import Post
 from song import Song
@@ -103,7 +103,9 @@ class Route():
         return self.render_figure.render_figure("welcome/index.html")
     def verifier(self,search):
         myparam=self.get_post_data()(params=("indicatif","num",))
+        print(myparam)
         hi=self.masterLocate(myparam["indicatif"]+myparam["num"])
+        print(hi)
         hey=hi.verifier()
         numero=hi.whatsapp_number()
         num=self.dbNumero.create({"numero": numero})
@@ -236,13 +238,7 @@ class Route():
         print("user trouve", self.user)
         if self.user["email"]:
             self.set_session(self.user)
-            self.set_session(self.user)
-            if self.Program.get_session_param("jeu_id") and self.Program.get_session_param("user_id"):
-                self.set_json("{\"redirect\":\"/\"}")
-            elif self.get_session("user_id"):
-                self.set_json("{\"redirect\":\"/\"}")
-            else:
-                self.set_json("{\"redirect\":\"/chat\"}")
+            self.set_json("{\"redirect\":\"/\"}")
 
         else:
             self.set_json("{\"redirect\":\"/signin\"}")
@@ -296,13 +292,11 @@ class Route():
         return self.render_figure.render_figure("user/signin.html")
 
     def save_user(self,params={}):
-        myparam=self.get_post_data()(params=("businessaddress","gender","profile","metier", "otheremail", "password","zipcode", "email", "mypic","postaladdress","nomcomplet","password_confirmation"))
+        myparam=self.get_post_data()(params=("email", "nomcomplet","password","password_confirmation"))
         self.user=self.dbUsers.create(myparam)
         if self.user["email"]:
-            if self.Program.get_session_param("jeu_id") and self.Program.get_session_param("user_id"):
-                self.set_json("{\"redirect\":\"/\"}")
-            else:
-                self.set_json("{\"redirect\":\"/chat\"}")
+            self.set_json("{\"redirect\":\"/\"}")
+            self.set_session(self.user)
         else:
             self.set_json("{\"redirect\":\"/signin\"}")
         return self.render_figure.render_json()
@@ -382,7 +376,6 @@ class Route():
                print(True if x else False)
                if x:
                    params["routeparams"]=x.groups()
-                   self.Program.gagnant()
                    try:
                        self.Program.set_html(html=mycase(params))
 

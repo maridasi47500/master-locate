@@ -6,6 +6,7 @@ from song import Song
 from cado import Cado
 from gagnant import Gagnant
 from jeu import Jeu
+from mydb import Mydb
 import json
 import sys
 class RenderFigure():
@@ -16,6 +17,7 @@ class RenderFigure():
         self.title=program.get_title()
         self.dbCado=Cado()
         self.dbJeu=Jeu()
+        self.db=Mydb()
         self.dbSong=Song()
         self.dbArtist=Artist()
         self.dbGagnant=Gagnant()
@@ -43,16 +45,17 @@ class RenderFigure():
     def render_body(self):
         try:
           mystr=""
+          loc={"db":self.db,"session": self.session,"render_collection": self.render_collection,"params":self.params,"getparams": self.getparams,"dbCado":self.dbCado, "dbGagnant":self.dbGagnant,"dbSong":self.dbSong,"dbArtist":self.dbArtist,"dbJeu":self.dbJeu}
           for j in self.body.split("<%="):
               if "%>" not in j:
                   mystr+=j
                   continue
               k=j.split("%>")
-              print("my session",self.session)
-              loc={"session": self.session,"render_collection": self.render_collection,"params":self.params,"getparams": self.getparams,"dbCado":self.dbCado, "dbGagnant":self.dbGagnant,"dbSong":self.dbSong,"dbArtist":self.dbArtist,"dbJeu":self.dbJeu}
+              #print("my session",self.session)
+
               for n in self.params:
                   loc[n]=self.params[n]
-              print(k[0])
+              #print(k[0])
               l=exec("myvalue="+k[0], globals(), loc)
               mystr+=str(loc["myvalue"]) if loc["myvalue"] is not None else ""
               mystr+=k[1]
@@ -74,10 +77,10 @@ class RenderFigure():
 
                 k=j.split("%>")
                 loc={"paspremier":paspremier,as_: x,"index":i,  "params": self.params,"render_collection":self.render_collection,"dbSong":self.dbSong,"json":json}
-                print(dict(x))
+                #print(dict(x))
                 if k[0]:
-                  print(k[0], "content render")
-                  print(k[0])
+                  #print(k[0], "content render")
+                  #print(k[0])
                   l=exec("myvalue="+k[0], globals(), loc)
                   mystr+=str(loc["myvalue"])
                 if k[1]:
@@ -145,7 +148,9 @@ class RenderFigure():
         self.mytemplate=False
 
         self.body=open(os.path.abspath(self.path+"/"+filename),"r").read()
+
         self.body=self.render_body()
+        print("lenth body",len(self.body))
         try:
           return self.body.encode("utf-8")
         except:

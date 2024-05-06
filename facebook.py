@@ -1,8 +1,8 @@
-from facegraph import Graph
+#from facegraph import Graph
 from os import environ
 class Facebook:
     def __init__(self,accesstoken=environ["facebooktoken"]):
-        self.g=Graph(accesstoken)
+        self.g=""#Graph(accesstoken)
     def me(self):
         self.about_me=self.g.me
     def person(self,num):

@@ -8,12 +8,12 @@ class Directory():
     css=False
     def __init__(self, title):
         self.title=title
-        self.session={"email":None,"name":None,"notice":None}
+        self.session={"user_id":None,"email":None,"name":None,"notice":None}
         self.path="./"
         self.dbUser=User()
         self.html=""
         self.url=""
-        self.mesparams=["jeu_id","song_id","user_id","email","name","notice"]
+        self.mesparams=["user_id","email","name","notice"]
         self.redirect=False
     def logout(self):
         for x in self.mesparams:
@@ -124,33 +124,6 @@ class Directory():
         return self.title
     def get_path(self):
         return self.path
-    def gagnant(self):
-        user_id=""
-        jeu_id=""
-        song_id=""
-        try:
-            user_id=int(self.session["user_id"])
-        except:
-            print("hey")
-            user_id=None
-        try:
-            jeu_id=int(self.get_session_param_null("jeu_id"))
-        except:
-            jeu_id=None
-        try:
-            song_id=int(self.get_session_param_null("song_id"))
-        except:
-            song_id=None
-        print("/////////////////////////////////////////////////")
-        print("/////////////////GAGNANT/////////////////////////")
-        print("/////////////////////////////////////////////////")
-        print(user_id,song_id,jeu_id)
-        if user_id and song_id and jeu_id:
-
-            self.dbUser.userwin(user_id,song_id,jeu_id)
-            self.set_session_param_null("song_id")
-            self.set_session_param_null("jeu_id")
-
     def redirect_if_not_logged_in(self):
         mysession=self.get_session()
         print("url : : ",self.url)

@@ -45,16 +45,16 @@ class User(Model):
     def getbyemailpw(self,email,pw):
         print("PARAMS email, pw")
         print(email, pw)
-        self.cur.execute("select * from users where otheremail = ? and password = ?",(email,pw,))
+        self.cur.execute("select * from users where email = ? and password = ?",(email,pw,))
 
         
         row=self.cur.fetchone()
         print(dict(row))
         print(row)
         if row:
-            return {"user_id":row["id"],"notice":"vous êtes connecté","name": row["nomcomplet"],"email": row["otheremail"]}
+            return {"user_id":row["id"],"notice":"vous êtes connecté","name": row["nomcomplet"],"email": row["email"]}
         else:
-            return {"notice":"","name":"","email": ""}
+            return {"notice":"","name":"","email": None}
     def getall(self):
         self.cur.execute("select * from users")
         
@@ -93,17 +93,17 @@ class User(Model):
         print("M Y H A S H")
         print(myhash,myhash.keys())
         try:
-          self.cur.execute("insert into users (postaladdress,metier,mypic,nomcomplet,gender, businessaddress, email, profile, zipcode, otheremail, password) values (:postaladdress,:metier,:mypic,:nomcomplet,:gender, :businessaddress, :email, :profile, :zipcode, :otheremail, :password)",myhash)
+          self.cur.execute("insert into users (email, password,nomcomplet) values (:email, :password,:nomcomplet)",myhash)
           self.con.commit()
         except Exception as e:
           print("my error"+str(e))
         
-        self.cur.execute("select id,otheremail,nomcomplet from users where password = ? and otheremail = ?", (myhash["password"], myhash["otheremail"]))
+        myid=self.cur.lastrowid
+        self.cur.execute("select id,email,nomcomplet from users where id = ?", (myid,))
         row=self.cur.fetchone()
         
-        myid=row["id"]
 
-        return {"user_id":myid,"notice": "vous avez été inscrit(e)","email": row["otheremail"],"name":row["nomcomplet"]}
+        return {"user_id":myid,"notice": "vous avez été inscrit(e)","email": row["email"],"name":row["nomcomplet"]}
 
 
     def update(self,params):
