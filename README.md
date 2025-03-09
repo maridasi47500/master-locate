@@ -1,5 +1,5 @@
 # master locate
-- il y a plein de choses que l'on fait tous les jour :house: :bicyclist: :iphone: :camera: :bowl_with_spoon: :running_woman: :sleeping_bed:
+- il y a plein de choses que l'on fait tous les jour :house: :bicyclist: :iphone: :camera: :bowl_with_spoon: :running_woman: :sleeping_bed: 🥗 👗 
 - pour se rappeler de toutes ces chose il faut mieux savoir comment les enregistrer :skull:
 - facebook, whatsapp 
 - android : sms, journal d'appel, gps 📱
